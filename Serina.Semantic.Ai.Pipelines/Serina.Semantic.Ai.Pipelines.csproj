@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+
+
+    <PackageId>Serina.Semantic.Ai.Pipelines</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>SerinaSolutions</Authors>
+    <Company>Serina.space</Company>
+    <Description>Serina Pipelines for Semantic Kernel allows to build flexible Ai Proccessing pipelines.</Description>
+    <PackageTags>AI, NLP, SemanticKernel</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/yourrepo</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    
+    
+    
+    
+    
+    
+    
+    
+  </PropertyGroup>
+
+  
+  <!-- Semantic Dependendencies -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.31.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.31.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.31.0" />
+  </ItemGroup>
+  
+  <!-- Semantic App Dependencies  -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.1.0" />
+    <PackageReference Include="Microsoft.KernelMemory.AI.AzureOpenAI" Version="0.95.241216.2" />
+    <PackageReference Include="Microsoft.KernelMemory.AI.Ollama" Version="0.94.241201.1" />
+    <PackageReference Include="Microsoft.KernelMemory.Core" Version="0.94.241201.1" />
+    <PackageReference Include="Microsoft.KernelMemory.MemoryDb.Qdrant" Version="0.94.241201.1" />
+    <PackageReference Include="Microsoft.KernelMemory.SemanticKernelPlugin" Version="0.94.241201.1" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.31.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.31.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.31.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Qdrant" Version="1.31.0-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Redis" Version="1.31.0-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.31.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Planners.Handlebars" Version="1.24.1-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.31.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.Abstractions" Version="1.31.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.31.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Planners.Handlebars" Version="1.31.0-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Plugins.Memory" Version="1.31.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.31.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.31.0" />
+  </ItemGroup>
+  
+  <!-- End dependencies -->
+  
+  
+  
+  
+  
+</Project>
