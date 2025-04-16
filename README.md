@@ -2,6 +2,10 @@
 
 Samples: https://github.com/pashkovdenis/serinasamples
 
+## Updates
+
+Added Autogen support, added example app and Autogen step!
+
 ## Overview
 The **Semantic Kernel Pipeline** is a .NET 8 NuGet package that enables flexible AI-driven workflows. It supports **memory plugins, service selection, streaming responses, history reducers, and summarizers**, making it an ideal solution for conversational AI, intelligent data retrieval, and custom AI workflows.
 
