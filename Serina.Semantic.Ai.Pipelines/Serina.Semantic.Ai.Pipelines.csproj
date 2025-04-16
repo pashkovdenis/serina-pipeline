@@ -8,7 +8,7 @@
 
 
     <PackageId>Serina.Semantic.Ai.Pipelines</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.2</Version>
     <Authors>SerinaSolutions</Authors>
     <Company>Serina.space</Company>
     <Description>Serina Pipelines for Semantic Kernel allows to build flexible Ai Proccessing pipelines.</Description>
@@ -30,6 +30,7 @@
   <!-- Semantic Dependendencies -->
 
   <ItemGroup>
+    <PackageReference Include="AutoGen" Version="0.2.0" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.31.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.31.0" />
     <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.31.0" />

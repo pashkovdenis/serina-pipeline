@@ -6,7 +6,6 @@ using OpenAI.Chat;
 using Serina.Semantic.Ai.Pipelines.Enumerations;
 using Serina.Semantic.Ai.Pipelines.Interfaces;
 using Serina.Semantic.Ai.Pipelines.Models;
-using Serina.Semantic.Ai.Pipelines.Steps;
 using Serina.Semantic.Ai.Pipelines.ValueObject;
 using System.Diagnostics;
 
@@ -60,29 +59,24 @@ namespace Serina.Semantic.Ai.Pipelines.Steps.Chat
 
             chatHistory = await ExecuteReduceAsync(context, chatHistory, chatService);
 
-            _ = Task.Run(async () =>
+
+            await foreach (var chatUpdate in chatService.GetStreamingChatMessageContentsAsync(chatHistory,
+                openAIPromptExecutionSettings, kernel: _kernel))
             {
+                var messageResponse = GetMessageResponseFromUpdate(chatUpdate);
 
-                await foreach (var chatUpdate in chatService.GetStreamingChatMessageContentsAsync(chatHistory,
-                    openAIPromptExecutionSettings, kernel: _kernel))
+                await _pipeStream.WriteChunk(messageResponse, context.Id);
+
+                Debug.WriteLine(messageResponse.Content);
+
+                if (messageResponse.IsDone)
                 {
-                    var messageResponse = GetMessageResponseFromUpdate(chatUpdate);
+                    _pipeStream.Complete(context.Id);
 
-                    await _pipeStream.WriteChunk(messageResponse, context.Id);
-
-                    Debug.WriteLine(messageResponse.Content);
-
-                    if (messageResponse.IsDone)
-                    {
-                        _pipeStream.Complete(context.Id);
-
-                        break;
-                    }
+                    break;
                 }
-
-            });
-
-
+            }
+             
             if (_next != null)
             {
                 return await _next.ExecuteStepAsync(context, token);

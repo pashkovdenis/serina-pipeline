@@ -384,7 +384,7 @@ namespace Serina.Semantic.Ai.Pipelines.Utils
 
                 .WithOllamaTextGeneration(config, new CL100KTokenizer())
                 .WithOllamaTextEmbeddingGeneration(config, new CL100KTokenizer())
-
+                
                 .Configure(builder => builder.Services.AddLogging(l =>
                 {
                     l.AddDebug();
