@@ -2,6 +2,34 @@
 
 Samples: https://github.com/pashkovdenis/serinasamples
 
+## Updates
+
+Added   public sealed class TokenChunkingReducer : ISerinaReducer
+
+var pipeline = PipelineBuilder
+    .New()
+    .New(new StreamingChatStep(Stream))
+    .WithKernel(new SemanticKernelOptions
+    {
+        Models = new List<SemanticModelOption>
+        {
+            new SemanticModelOption
+            {
+                Endpoint = "http://192.168.88.231:7000",
+                Name = "gpt-4.1-nano",
+                Key = "123456",
+                EngineType = 1
+            }
+        }
+    })
+         
+    .AddReducer(new TokenChunkingReducer(tokenLimit: 1))
+    .AttachKernel()
+    .Build();
+
+Break messages and proccess them in chunks for long messages. 
+Added Autogen support, added example app and Autogen step!
+
 ## Overview
 The **Semantic Kernel Pipeline** is a .NET 8 NuGet package that enables flexible AI-driven workflows. It supports **memory plugins, service selection, streaming responses, history reducers, and summarizers**, making it an ideal solution for conversational AI, intelligent data retrieval, and custom AI workflows.
 
