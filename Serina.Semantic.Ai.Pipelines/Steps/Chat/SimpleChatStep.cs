@@ -18,49 +18,24 @@ namespace Serina.Semantic.Ai.Pipelines.Steps.Chat
         public override async ValueTask<PipelineContext> ExecuteStepAsync(PipelineContext context, CancellationToken token)
         {
             var chatService = _kernel.GetRequiredService<IChatCompletionService>();
-
-
-            await base.ExecuteStepAsync(context, token);
-
-
-            var chatHistory = new ChatHistory();
+            
+            await base.PrepareHistoryAsync(context);
 
             await base.ExecuteStepAsync(context, token);
 
-            if (context.RequestMessage.History != null && context.RequestMessage.History.Any())
-            {
-                AddMessage(context, chatHistory);
-
-            }
-            else
-            {
-
-
-
-                if (context.RequestMessage.Role == MessageRole.Bot)
-                    AddMessage(context.RequestMessage.Content, MessageRole.Bot, chatHistory);
-
-                if (context.RequestMessage.Role == MessageRole.User)
-                    AddMessage(context.RequestMessage.Content, MessageRole.User, chatHistory);
-
-                if (context.RequestMessage.Role == MessageRole.System)
-                    AddMessage(context.RequestMessage.Content, MessageRole.System, chatHistory);
-
-
-            }
-
-
+        
+            await base.ExecuteStepAsync(context, token);
+  
             OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
             {
                 ToolCallBehavior = context.EnableFunctions ? ToolCallBehavior.AutoInvokeKernelFunctions : null,
                 Temperature = context.RequestMessage.Temperature,
-                FunctionChoiceBehavior = context.AutoFunction ? FunctionChoiceBehavior.Auto() : null,
-
+                FunctionChoiceBehavior = context.AutoFunction ? FunctionChoiceBehavior.Auto() : null, 
             };
 
-            chatHistory = await ExecuteReduceAsync(context, chatHistory, chatService);
+            context.ChatHistory = await ExecuteReduceAsync(context, context.ChatHistory, chatService);
 
-            var message = await chatService.GetChatMessageContentAsync(chatHistory, openAIPromptExecutionSettings, kernel: _kernel);
+            var message = await chatService.GetChatMessageContentAsync(context.ChatHistory, openAIPromptExecutionSettings, kernel: _kernel);
 
             context.Response = new MessageResponse();
 
@@ -72,42 +47,6 @@ namespace Serina.Semantic.Ai.Pipelines.Steps.Chat
             }
 
             return context;
-        }
-
-
-
-
-
-
-        private void AddMessage(PipelineContext context, ChatHistory chatHistory)
-        {
-            foreach (var h in context.RequestMessage.History)
-            {
-                AddMessage(h.Content, h.Role, h.Payload, chatHistory);
-            }
-        }
-
-        private void AddMessage(string message, MessageRole role, MessagePayload payload = null, ChatHistory chatHistory = null)
-        {
-            switch (role)
-            {
-                case MessageRole.Bot:
-                    chatHistory.AddAssistantMessage(message);
-                    break;
-
-                case MessageRole.User:
-                    var userMessage = new ChatMessageContentItemCollection { new TextContent(message) };
-
-                    if (payload?.Type == PayloadType.Image)
-                        userMessage.Add(new ImageContent(payload.Uri));
-
-                    chatHistory.AddUserMessage(userMessage);
-                    break;
-
-                case MessageRole.System:
-                    chatHistory.AddSystemMessage(message);
-                    break;
-            }
-        }
+        } 
     }
 }

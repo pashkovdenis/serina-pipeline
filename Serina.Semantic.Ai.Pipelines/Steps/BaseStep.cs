@@ -1,5 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Serina.Semantic.Ai.Pipelines.Enumerations;
 using Serina.Semantic.Ai.Pipelines.Interfaces;
 using Serina.Semantic.Ai.Pipelines.Models;
 using Serina.Semantic.Ai.Pipelines.SemanticKernel;
@@ -70,7 +71,9 @@ namespace Serina.Semantic.Ai.Pipelines.Steps
             IChatCompletionService chatService)
         {
             ChatHistory chatHistory = null;
+    
 
+            // Execute reducers 
             if (_reducers.Any())
             {
                 foreach (var reducer in _reducers)
@@ -78,6 +81,9 @@ namespace Serina.Semantic.Ai.Pipelines.Steps
                     chatHistory = await reducer.ReduceHistory(context, chatHistory ?? original, chatService);
                 }
             }
+
+
+
 
             return chatHistory ?? original;
         }
@@ -111,6 +117,58 @@ namespace Serina.Semantic.Ai.Pipelines.Steps
             }
 
             return context;
+        }
+
+
+        /// <summary>
+        /// Prepare ChatHistory 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public virtual async ValueTask PrepareHistoryAsync(PipelineContext context)
+        {
+            if (context.RequestMessage.History != null && context.RequestMessage.History.Any())
+            {
+                AddMessage(context, context.ChatHistory); 
+            
+            } else
+            {
+
+                AddMessage(context.RequestMessage.Content, MessageRole.User, context.ChatHistory);
+
+            }
+
+        }
+
+        private void AddMessage(PipelineContext context, ChatHistory chatHistory)
+        {
+            foreach (var h in context.RequestMessage.History)
+            {
+                AddMessage(h.Content, h.Role, h.Payload, chatHistory);
+            }
+        }
+
+        private void AddMessage(string message, MessageRole role, MessagePayload payload = null, ChatHistory chatHistory = null)
+        {
+            switch (role)
+            {
+                case MessageRole.Bot:
+                    chatHistory.AddAssistantMessage(message);
+                    break;
+
+                case MessageRole.User:
+                    var userMessage = new ChatMessageContentItemCollection { new TextContent(message) };
+
+                    if (payload?.Type == PayloadType.Image)
+                        userMessage.Add(new ImageContent(payload.Uri));
+
+                    chatHistory.AddUserMessage(userMessage);
+                    break;
+
+                case MessageRole.System:
+                    chatHistory.AddSystemMessage(message);
+                    break;
+            }
         }
 
     }

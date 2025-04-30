@@ -1,4 +1,6 @@
-﻿namespace Serina.Semantic.Ai.Pipelines.Models
+﻿using Microsoft.SemanticKernel.ChatCompletion;
+
+namespace Serina.Semantic.Ai.Pipelines.Models
 {
     public sealed class PipelineContext
     {
@@ -13,6 +15,10 @@
         public bool EnableFunctions { get; set; }
 
         public bool AutoFunction { get; set; }
+
+
+        public ChatHistory ChatHistory { get; set; } = new();
+
     }
 
 

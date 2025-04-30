@@ -8,7 +8,7 @@
 
 
     <PackageId>Serina.Semantic.Ai.Pipelines</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
     <Authors>SerinaSolutions</Authors>
     <Company>Serina.space</Company>
     <Description>Serina Pipelines for Semantic Kernel allows to build flexible Ai Proccessing pipelines.</Description>
@@ -60,6 +60,7 @@
     <PackageReference Include="Microsoft.SemanticKernel.Plugins.Memory" Version="1.31.0-alpha" />
     <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.31.0-alpha" />
     <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.31.0" />
+    <PackageReference Include="TiktokenSharp" Version="1.1.7" />
   </ItemGroup>
   
   <!-- End dependencies -->

@@ -27,19 +27,13 @@ namespace Serina.Semantic.Ai.Pipelines.Steps.Chat
 
         public override async ValueTask<PipelineContext> ExecuteStepAsync(PipelineContext context, CancellationToken token)
         {
-            var chatHistory = new ChatHistory();
+
+            await base.PrepareHistoryAsync(context);
 
             await base.ExecuteStepAsync(context, token);
 
-            if (context.RequestMessage.History != null && context.RequestMessage.History.Any())
-            {
-                AddMessage(context, chatHistory);
-
-            }
-            else
-            {
-                return context;
-            }
+          
+            
 
             var chatService = _kernel.GetRequiredService<IChatCompletionService>();
 
@@ -57,10 +51,10 @@ namespace Serina.Semantic.Ai.Pipelines.Steps.Chat
 
             };
 
-            chatHistory = await ExecuteReduceAsync(context, chatHistory, chatService);
+            context.ChatHistory = await ExecuteReduceAsync(context, context.ChatHistory, chatService);
 
 
-            await foreach (var chatUpdate in chatService.GetStreamingChatMessageContentsAsync(chatHistory,
+            await foreach (var chatUpdate in chatService.GetStreamingChatMessageContentsAsync(context.ChatHistory,
                 openAIPromptExecutionSettings, kernel: _kernel))
             {
                 var messageResponse = GetMessageResponseFromUpdate(chatUpdate);
@@ -128,7 +122,7 @@ namespace Serina.Semantic.Ai.Pipelines.Steps.Chat
 
                 var messageResponse = new MessageResponse();
 
-                messageResponse.AddContent(ollamaUpdate?.Message.Content ?? "");
+                messageResponse.AddContent(ollamaUpdate?.Message?.Content ?? "");
 
                 if (ollamaUpdate?.Message?.Images != default)
                 {
@@ -151,36 +145,7 @@ namespace Serina.Semantic.Ai.Pipelines.Steps.Chat
         }
 
 
-        private void AddMessage(PipelineContext context, ChatHistory chatHistory)
-        {
-            foreach (var h in context.RequestMessage.History)
-            {
-                AddMessage(h.Content, h.Role, h.Payload, chatHistory);
-            }
-        }
-
-        private void AddMessage(string message, MessageRole role, MessagePayload payload = null, ChatHistory chatHistory = null)
-        {
-            switch (role)
-            {
-                case MessageRole.Bot:
-                    chatHistory.AddAssistantMessage(message);
-                    break;
-
-                case MessageRole.User:
-                    var userMessage = new ChatMessageContentItemCollection { new TextContent(message) };
-
-                    if (payload?.Type == PayloadType.Image)
-                        userMessage.Add(new ImageContent(payload.Uri));
-
-                    chatHistory.AddUserMessage(userMessage);
-                    break;
-
-                case MessageRole.System:
-                    chatHistory.AddSystemMessage(message);
-                    break;
-            }
-        }
+    
 
     }
 }
