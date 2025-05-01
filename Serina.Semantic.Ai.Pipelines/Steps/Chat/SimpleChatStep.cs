@@ -31,6 +31,7 @@ namespace Serina.Semantic.Ai.Pipelines.Steps.Chat
                 ToolCallBehavior = context.EnableFunctions ? ToolCallBehavior.AutoInvokeKernelFunctions : null,
                 Temperature = context.RequestMessage.Temperature,
                 FunctionChoiceBehavior = context.AutoFunction ? FunctionChoiceBehavior.Auto() : null, 
+                ModelId =context.RequestMessage.model ?? null
             };
 
             context.ChatHistory = await ExecuteReduceAsync(context, context.ChatHistory, chatService);

@@ -8,7 +8,7 @@
 
 
     <PackageId>Serina.Semantic.Ai.Pipelines</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>SerinaSolutions</Authors>
     <Company>Serina.space</Company>
     <Description>Serina Pipelines for Semantic Kernel allows to build flexible Ai Proccessing pipelines.</Description>
